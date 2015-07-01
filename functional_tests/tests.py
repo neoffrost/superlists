@@ -57,7 +57,7 @@ class NewVisitorTest(LiveServerTestCase):
 		# 에디스는 사이트가 입력한 목록을 저장하고 있는지 궁금하다.
 		# 사이트는 그녀를 위한 특정 URL을 생성해 준다.
 		# 이때 URL에 대한 설명도 함께 제공된다.
-		self.check_for_row_in_list_table('2: 공작깃털을 이용해서 그물 만들기')
+		self.check_for_row_in_list_table('2: 공작깃털을 사용해서 그물 만들기')
 		self.check_for_row_in_list_table('1: 공작깃털 사기')
 
 		# 새로운 사용자인 프란시스가 사이트에 접속한다
@@ -76,7 +76,7 @@ class NewVisitorTest(LiveServerTestCase):
 
 		# 프란시스가 새로운 작업 아이템을 입력하기 시작한다
 		# 그는 에디스 보다 재미가 없다
-		inputbox = self.brower.find_element_by_id('id_new_item')
+		inputbox = self.browser.find_element_by_id('id_new_item')
 		inputbox.send_keys('우유 사기')
 		inputbox.send_keys(Keys.ENTER)
 
