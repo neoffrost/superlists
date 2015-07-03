@@ -39,7 +39,7 @@ class NewVisitorTest(LiveServerTestCase):
 		# "1: 공작깃털 사기" 아이템이 추가된다
 		inputbox.send_keys(Keys.ENTER)
 
-		time.sleep(1)
+		time.sleep(0.5)
 		edith_list_url = self.browser.current_url
 		self.assertRegex(edith_list_url, '/lists/.+')
 		self.check_for_row_in_list_table('1: 공작깃털 사기')
@@ -52,7 +52,7 @@ class NewVisitorTest(LiveServerTestCase):
 		inputbox.send_keys(Keys.ENTER)
 
 		# 페이지는 다시 갱신되고, 2개 아이템이 목록에 보여진다
-		time.sleep(1)
+		time.sleep(0.5)
 		self.check_for_row_in_list_table('1: 공작깃털 사기')
 		self.check_for_row_in_list_table('2: 공작깃털을 사용해서 그물 만들기')
 
@@ -95,3 +95,15 @@ class NewVisitorTest(LiveServerTestCase):
 		# 둘다 만족하고 잠자리에 든다.
 		self.fail('Finish the test!')
 
+	def test_layout_and_styling(self):
+		# 에디스는 메인 페이지를 방문한다
+		self.browser.get(self.live_server_url)
+		self.browser.set_window_size(1024, 768)
+
+		# 그녀는 입력 상자가 가운데 배치된 것을 본다
+		inputbox = self.browser.find_element_by_id('id_new_item')
+		self.assertAlmostEqual(
+			inputbox.location['x'] + inputbox.size['width'] / 2,
+			512,
+			delta=10
+		)
