@@ -1,15 +1,16 @@
-from django.test import LiveServerTestCase
+from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 import time
 
-class NewVisitorTest(LiveServerTestCase):
+class NewVisitorTest(StaticLiveServerTestCase):
 
 	def setUp(self):
 		self.browser = webdriver.Firefox()
 		self.browser.implicitly_wait(3)
 
 	def tearDown(self):
+		self.browser.refresh()
 		self.browser.quit()
 
 	def check_for_row_in_list_table(self, row_text):
@@ -39,7 +40,6 @@ class NewVisitorTest(LiveServerTestCase):
 		# "1: 공작깃털 사기" 아이템이 추가된다
 		inputbox.send_keys(Keys.ENTER)
 
-		time.sleep(0.5)
 		edith_list_url = self.browser.current_url
 		self.assertRegex(edith_list_url, '/lists/.+')
 		self.check_for_row_in_list_table('1: 공작깃털 사기')
@@ -52,7 +52,6 @@ class NewVisitorTest(LiveServerTestCase):
 		inputbox.send_keys(Keys.ENTER)
 
 		# 페이지는 다시 갱신되고, 2개 아이템이 목록에 보여진다
-		time.sleep(0.5)
 		self.check_for_row_in_list_table('1: 공작깃털 사기')
 		self.check_for_row_in_list_table('2: 공작깃털을 사용해서 그물 만들기')
 
@@ -66,6 +65,8 @@ class NewVisitorTest(LiveServerTestCase):
 
 		## 새로운 브라우저 세션을 이요해서 에디스의 정보가
 		## 쿠키를 통해 유입되는 것을 방지한다
+		time.sleep(1)
+		self.browser.refresh()
 		self.browser.quit()
 		self.browser = webdriver.Firefox()
 
@@ -107,3 +108,5 @@ class NewVisitorTest(LiveServerTestCase):
 			512,
 			delta=10
 		)
+
+		self.fail('Finish the test!')
