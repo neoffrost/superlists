@@ -1,5 +1,10 @@
 from django.test import TestCase
+from django.http import HttpRequest
+from django.utils.html import escape
+from django.core.urlresolvers import resolve
+from django.template.loader import render_to_string
 from lists.models import Item, List
+from lists.views import home_page
 
 class HomePageTest(TestCase):
 
@@ -84,6 +89,18 @@ class NewListTest(TestCase):
 		correct_list = List.objects.create()
 		response = self.client.get('/lists/%d/' % (correct_list.id,))
 		self.assertEqual(response.context['list'], correct_list)
+
+	def test_validation_errors_are_sent_back_to_home_page_template(self):
+		response = self.client.post('/lists/new', data={'item_text': ''})
+		self.assertEqual(response.status_code, 200)
+		self.assertTemplateUsed(response, 'home.html')
+		expected_error = escape("빈 아이템을 등록할 수 없습니다")
+		self.assertContains(response, expected_error)
+
+	def test_invalid_list_items_arent_saved(self):
+		self.client.post('/lists/new', data={'item_text': ''})
+		self.assertEqual(List.objects.count(), 0)
+		self.assertEqual(Item.objects.count(), 0)
 
 class ListAndItemModelsTest(TestCase):
 
